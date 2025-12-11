@@ -221,7 +221,7 @@ tags
 # End of https://www.toptal.com/developers/gitignore/api/git,linux,vim,visualstudiocode,node,react
 
 # Imágenes de productos
-frontend/public/img/productos/*
+#frontend/public/img/productos/*
 !frontend/public/img/productos/.gitkeep
 
 # Archivos temporales de multer
