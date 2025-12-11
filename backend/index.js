@@ -31,7 +31,14 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 
 // MIDDLEWARES
 // Habilitar CORS para permitir peticiones desde el frontend
-app.use(cors());
+const corsOptions = {
+    origin: [
+    'https://final-pd-abf-deploy.vercel.app/'
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 // Parsear JSON en el body de las peticiones
 app.use(express.json());
 // Servir archivos estáticos desde frontend/public
