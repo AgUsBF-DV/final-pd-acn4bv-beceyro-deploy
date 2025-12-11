@@ -33,7 +33,8 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 // Habilitar CORS para permitir peticiones desde el frontend
 const corsOptions = {
     origin: [
-    'https://final-pd-abf-deploy.vercel.app/'
+        'http://localhost:5173',
+        'https://final-pd-abf-deploy.vercel.app'
     ],
     credentials: true,
     optionsSuccessStatus: 200
@@ -66,25 +67,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// ENTORNO PRODUCCIÓN / DESARROLLO
-if (NODE_ENV === "production") {
-  // PRODUCCIÓN: Servir frontend compilado desde dist (archivos estáticos)
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  // Fallback: todas las rutas restantes sirven index.html para SPA routing
-  app.use((req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+// RUTA RAÍZ - Para verificar que el backend funciona
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "API del vivero funcionando",
+    status: "ok",
+    environment: NODE_ENV,
+    timestamp: new Date().toISOString()
   });
-} else {
-  // DESARROLLO: Endpoint simple para verificar que el backend funciona
-  // El frontend corre en servidor separado (Vite) en desarrollo
-  app.get("/", (req, res) => {
-    res.send("Backend funcionando en modo " + NODE_ENV);
-  });
-  // En desarrollo, si la ruta no existe muestra error y no el index estatico
-  app.use((req, res, next) => {
-    next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
-  });
-}
+});
+
+// MANEJO DE RUTAS NO ENCONTRADAS (404)
+app.use((req, res, next) => {
+  next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
+});
 
 // MIDDLEWARE DE MANEJO DE ERRORES
 app.use(errorHandler);
